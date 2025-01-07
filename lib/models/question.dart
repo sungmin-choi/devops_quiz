@@ -1,24 +1,10 @@
+import 'package:devops_quiz/models/category.dart';
+
 enum QuestionType {
   singleChoice,
   multipleChoice,
   trueFalse,
   fillInTheBlank,
-}
-
-enum QuestionCategory {
-  devops,
-  kubernetes,
-  docker,
-  git,
-  ciCd,
-  linux,
-  aws,
-  azure,
-  jenkins,
-  gitlab,
-  github,
-  ansible,
-  terraform,
 }
 
 enum QuestionDifficulty {
