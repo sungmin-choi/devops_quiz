@@ -1,11 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:devops_quiz/models/category.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:devops_quiz/screens/question_settings.dart';
 
 class CategoryItemWidget extends StatelessWidget {
   const CategoryItemWidget({super.key, required this.category});
 
   final Category category;
+
+  void _goToQuestionSettingsScreen(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => QuestionSettingsScreen(category: category)),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +72,7 @@ class CategoryItemWidget extends StatelessWidget {
           ),
           SizedBox(height: 10),
           TextButton(
-            onPressed: () {},
+            onPressed: () => _goToQuestionSettingsScreen(context),
             style: TextButton.styleFrom(
               backgroundColor: Theme.of(context).colorScheme.secondary,
               foregroundColor: Colors.white,
@@ -72,7 +81,11 @@ class CategoryItemWidget extends StatelessWidget {
               ),
               minimumSize: Size(double.infinity, 20),
             ),
-            child: const Text('퀴즈 시작'),
+            child: const Text('퀴즈 시작',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                )),
           ),
         ],
       ),

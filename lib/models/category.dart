@@ -16,6 +16,8 @@ class Category {
   final String subtitle;
   final String imageUrl;
   final int questionCount;
+  final int easyQuestionCount;
+  final int mediumQuestionCount;
 
   Category({
     required this.category,
@@ -23,5 +25,7 @@ class Category {
     required this.subtitle,
     required this.imageUrl,
     required this.questionCount,
+    required this.easyQuestionCount,
+    required this.mediumQuestionCount,
   });
 }

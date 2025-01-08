@@ -10,7 +10,7 @@ enum QuestionType {
 enum QuestionDifficulty {
   easy,
   medium,
-  hard,
+  all,
 }
 
 class Question {
@@ -102,8 +102,6 @@ class Question {
         return QuestionDifficulty.easy;
       case 'medium':
         return QuestionDifficulty.medium;
-      case 'hard':
-        return QuestionDifficulty.hard;
       default:
         return QuestionDifficulty.easy; // 기본값
     }
