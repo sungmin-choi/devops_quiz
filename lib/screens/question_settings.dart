@@ -6,6 +6,7 @@ import 'package:devops_quiz/widgets/question_settings/question_count_slider.dart
 import 'package:devops_quiz/widgets/question_settings/question_level_selector.dart';
 import 'package:devops_quiz/widgets/question_settings/answer_reveal_timing_selector.dart';
 // import 'package:devops_quiz/widgets/question_settings/starred_problems_selecter.dart';
+import 'package:devops_quiz/screens/questions.dart';
 
 class QuestionSettingsScreen extends StatefulWidget {
   const QuestionSettingsScreen({super.key, required this.category});
@@ -30,6 +31,21 @@ class _QuestionSettingsScreenState extends State<QuestionSettingsScreen> {
     super.initState();
     _questionCount = widget.category.questionCount.toDouble();
     _maxQuestionCount = widget.category.questionCount;
+  }
+
+  void _navigateToQuestionsScreen() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => QuestionsScreen(
+          category: widget.category,
+          quizMode: _quizMode,
+          questionCount: _questionCount.round(),
+          questionLevel: _questionLevel,
+          answerRevealTiming: _answerRevealTiming,
+        ),
+      ),
+    );
   }
 
   @override
@@ -150,7 +166,7 @@ class _QuestionSettingsScreenState extends State<QuestionSettingsScreen> {
                 backgroundColor: Theme.of(context).colorScheme.secondary,
                 foregroundColor: Colors.white,
               ),
-              onPressed: () {},
+              onPressed: () => _navigateToQuestionsScreen(),
               child: Text('퀴즈 풀기',
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         fontWeight: FontWeight.bold,
