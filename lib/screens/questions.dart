@@ -7,7 +7,10 @@ import 'package:devops_quiz/data/dummy_data.dart';
 import 'package:devops_quiz/widgets/questions/question_choices.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:devops_quiz/provider/questions_provider.dart';
+import 'package:devops_quiz/provider/answers_provider.dart';
 import 'package:devops_quiz/provider/answer_provider.dart';
+import 'package:devops_quiz/widgets/questions/question_true_false.dart';
+import 'package:devops_quiz/widgets/questions/question_input.dart';
 
 class QuestionsScreen extends ConsumerStatefulWidget {
   const QuestionsScreen(
@@ -36,25 +39,38 @@ class _QuestionsScreenState extends ConsumerState<QuestionsScreen> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(questionsProvider.notifier).loadQuestions(kubernetesQuestions);
+      _initializeAnswer(_currentQuestionIndex, ref.watch(questionsProvider));
     });
   }
 
-  bool _enableNextButton(List<Question> questions, int index) {
-    if (questions.isEmpty) {
-      return false;
-    }
-    if (questions[index].questionType == QuestionType.singleChoice) {
-      return ref.watch(answerProvider).isNotEmpty;
-    } else if (questions[index].questionType == QuestionType.multipleChoice) {
-      return ref.watch(answerProvider).length > 1;
+  void _initializeAnswer(int index, List<Question> questions) {
+    final answers = ref.read(answersProvider);
+
+    print(' _initializeAnswer answers: $answers, index: $index');
+
+    dynamic currentAnswer;
+    if (answers.length > index && answers[index] != null) {
+      currentAnswer = answers[index];
     } else {
-      return ref.watch(answerProvider) != null;
+      if (questions[index].questionType == QuestionType.singleChoice ||
+          questions[index].questionType == QuestionType.multipleChoice) {
+        currentAnswer = [];
+      } else if (questions[index].questionType == QuestionType.trueFalse) {
+        currentAnswer = 'True';
+      } else {
+        currentAnswer = '';
+      }
     }
+
+    ref.read(currentAnswerProvider.notifier).state = currentAnswer;
   }
 
   @override
   Widget build(BuildContext context) {
     final questions = ref.watch(questionsProvider);
+    final answers = ref.watch(answersProvider);
+
+    print('answers: $answers');
 
     Widget buildQuestions(List<Question> questions, int index) {
       if (questions.isEmpty) {
@@ -69,6 +85,10 @@ class _QuestionsScreenState extends ConsumerState<QuestionsScreen> {
             questionType: questions[index].questionType,
             index: index,
             options: questions[index].options ?? []);
+      } else if (questions[index].questionType == QuestionType.trueFalse) {
+        return QuestionTrueFalse();
+      } else if (questions[index].questionType == QuestionType.fillInTheBlank) {
+        return QuestionInput();
       }
 
       return Container();
@@ -84,6 +104,7 @@ class _QuestionsScreenState extends ConsumerState<QuestionsScreen> {
           ),
           onPressed: () {
             Navigator.pop(context);
+            ref.read(answersProvider.notifier).clear();
           },
         ),
         title: Text('${widget.category.title} Quiz',
@@ -207,10 +228,14 @@ class _QuestionsScreenState extends ConsumerState<QuestionsScreen> {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(5),
                           ),
-                          backgroundColor: Colors.black, // 연한 회색
+                          backgroundColor: _currentQuestionIndex > 0
+                              ? Colors.black
+                              : Colors.grey, // 연한 회색
                         ),
                         onPressed: _currentQuestionIndex > 0
                             ? () {
+                                _initializeAnswer(
+                                    _currentQuestionIndex - 1, questions);
                                 setState(() {
                                   _currentQuestionIndex--;
                                 });
@@ -230,20 +255,25 @@ class _QuestionsScreenState extends ConsumerState<QuestionsScreen> {
                       margin: const EdgeInsets.only(left: 8),
                       child: TextButton(
                         style: TextButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                          backgroundColor:
-                              Theme.of(context).colorScheme.secondary,
-                        ),
-                        onPressed:
-                            _enableNextButton(questions, _currentQuestionIndex)
-                                ? () {
-                                    setState(() {
-                                      _currentQuestionIndex++;
-                                    });
-                                  }
-                                : null,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            backgroundColor:
+                                Theme.of(context).colorScheme.secondary),
+                        onPressed: () {
+                          if (_currentQuestionIndex < questions.length - 1) {
+                            ref.read(answersProvider.notifier).addAnswer(
+                                _currentQuestionIndex,
+                                ref.watch(currentAnswerProvider));
+                          }
+                          if (_currentQuestionIndex < questions.length - 2) {
+                            _initializeAnswer(
+                                _currentQuestionIndex + 1, questions);
+                          }
+                          setState(() {
+                            _currentQuestionIndex++;
+                          });
+                        },
                         child: Text('다음 문제',
                             style:
                                 Theme.of(context).textTheme.bodyLarge?.copyWith(

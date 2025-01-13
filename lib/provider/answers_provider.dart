@@ -10,6 +10,10 @@ class AnswersProvider extends StateNotifier<List<dynamic>> {
       state[index] = answer;
     }
   }
+
+  void clear() {
+    state = [];
+  }
 }
 
 final answersProvider = StateNotifierProvider<AnswersProvider, List<dynamic>>(
