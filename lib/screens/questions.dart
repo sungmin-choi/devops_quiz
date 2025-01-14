@@ -11,6 +11,7 @@ import 'package:devops_quiz/provider/answers_provider.dart';
 import 'package:devops_quiz/provider/answer_provider.dart';
 import 'package:devops_quiz/widgets/questions/question_true_false.dart';
 import 'package:devops_quiz/widgets/questions/question_input.dart';
+import 'package:devops_quiz/screens/result.dart';
 
 class QuestionsScreen extends ConsumerStatefulWidget {
   const QuestionsScreen(
@@ -41,6 +42,10 @@ class _QuestionsScreenState extends ConsumerState<QuestionsScreen> {
       ref.read(questionsProvider.notifier).loadQuestions(kubernetesQuestions);
       _initializeAnswer(_currentQuestionIndex, ref.watch(questionsProvider));
     });
+  }
+
+  bool _isLastQuestion() {
+    return _currentQuestionIndex == ref.watch(questionsProvider).length - 1;
   }
 
   void _initializeAnswer(int index, List<Question> questions) {
@@ -261,20 +266,35 @@ class _QuestionsScreenState extends ConsumerState<QuestionsScreen> {
                             backgroundColor:
                                 Theme.of(context).colorScheme.secondary),
                         onPressed: () {
-                          if (_currentQuestionIndex < questions.length - 1) {
+                          if (_isLastQuestion()) {
                             ref.read(answersProvider.notifier).addAnswer(
                                 _currentQuestionIndex,
                                 ref.watch(currentAnswerProvider));
+
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ResultScreen(
+                                  category: widget.category,
+                                ),
+                              ),
+                            );
+                          } else {
+                            if (_currentQuestionIndex < questions.length) {
+                              ref.read(answersProvider.notifier).addAnswer(
+                                  _currentQuestionIndex,
+                                  ref.watch(currentAnswerProvider));
+                            }
+                            if (_currentQuestionIndex < questions.length - 2) {
+                              _initializeAnswer(
+                                  _currentQuestionIndex + 1, questions);
+                            }
+                            setState(() {
+                              _currentQuestionIndex++;
+                            });
                           }
-                          if (_currentQuestionIndex < questions.length - 2) {
-                            _initializeAnswer(
-                                _currentQuestionIndex + 1, questions);
-                          }
-                          setState(() {
-                            _currentQuestionIndex++;
-                          });
                         },
-                        child: Text('다음 문제',
+                        child: Text(_isLastQuestion() ? '완료' : '다음 문제',
                             style:
                                 Theme.of(context).textTheme.bodyLarge?.copyWith(
                                       color: Colors.white,

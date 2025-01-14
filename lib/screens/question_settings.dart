@@ -7,6 +7,7 @@ import 'package:devops_quiz/widgets/question_settings/question_level_selector.da
 import 'package:devops_quiz/widgets/question_settings/answer_reveal_timing_selector.dart';
 // import 'package:devops_quiz/widgets/question_settings/starred_problems_selecter.dart';
 import 'package:devops_quiz/screens/questions.dart';
+import 'package:devops_quiz/screens/categories.dart';
 
 class QuestionSettingsScreen extends StatefulWidget {
   const QuestionSettingsScreen({super.key, required this.category});
@@ -59,7 +60,17 @@ class _QuestionSettingsScreenState extends State<QuestionSettingsScreen> {
             size: 20, // 아이콘 크기 조절
           ),
           onPressed: () {
-            Navigator.pop(context);
+            if (Navigator.canPop(context)) {
+              Navigator.pop(context);
+            } else {
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const CategoriesScreen(),
+                ),
+                (route) => false,
+              );
+            }
           },
         ),
         title: Text('Quiz Settings (${widget.category.title})',
