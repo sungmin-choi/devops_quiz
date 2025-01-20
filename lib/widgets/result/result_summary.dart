@@ -5,20 +5,24 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:devops_quiz/provider/answers_provider.dart';
 import 'package:devops_quiz/provider/answer_provider.dart';
 
-class ResultSummary extends ConsumerStatefulWidget {
-  const ResultSummary({super.key, required this.category});
+class ResultSummary extends ConsumerWidget {
+  const ResultSummary({
+    super.key,
+    required this.category,
+    required this.questionsCount,
+    required this.correctCount,
+    required this.isOnlyIncorrect,
+    required this.onTapOnlyIncorrect,
+  });
 
   final Category category;
+  final int questionsCount;
+  final int correctCount;
+  final bool isOnlyIncorrect;
+  final void Function() onTapOnlyIncorrect;
 
   @override
-  ConsumerState<ResultSummary> createState() => _ResultSummaryState();
-}
-
-class _ResultSummaryState extends ConsumerState<ResultSummary> {
-  bool _isOnlyIncorrect = false;
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Container(
       padding: const EdgeInsets.all(24.0),
       decoration: BoxDecoration(
@@ -42,7 +46,7 @@ class _ResultSummaryState extends ConsumerState<ResultSummary> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '8/10 정답',
+                    '${correctCount}/${questionsCount} 정답',
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
                           fontWeight: FontWeight.bold,
                           color: Colors.black87,
@@ -56,7 +60,7 @@ class _ResultSummaryState extends ConsumerState<ResultSummary> {
                     width: 90,
                     height: 90,
                     child: CircularProgressIndicator(
-                      value: 0.8, // 80%
+                      value: correctCount / questionsCount,
                       backgroundColor: Colors.grey[200],
                       valueColor:
                           AlwaysStoppedAnimation<Color>(Colors.blueAccent),
@@ -70,7 +74,7 @@ class _ResultSummaryState extends ConsumerState<ResultSummary> {
                     bottom: 0,
                     child: Center(
                       child: Text(
-                        '80%',
+                        '${(correctCount / questionsCount * 100).round()}%',
                         style:
                             Theme.of(context).textTheme.titleMedium?.copyWith(
                                   color: Colors.blueAccent,
@@ -104,7 +108,7 @@ class _ResultSummaryState extends ConsumerState<ResultSummary> {
                       context,
                       MaterialPageRoute(
                         builder: (context) => QuestionSettingsScreen(
-                          category: widget.category,
+                          category: category,
                         ),
                       ),
                       (route) => false,
@@ -130,12 +134,8 @@ class _ResultSummaryState extends ConsumerState<ResultSummary> {
                       borderRadius: BorderRadius.circular(10),
                     ),
                   ),
-                  onPressed: () {
-                    setState(() {
-                      _isOnlyIncorrect = !_isOnlyIncorrect;
-                    });
-                  },
-                  child: Text(_isOnlyIncorrect ? '전체 보기' : '오답만 보기'),
+                  onPressed: onTapOnlyIncorrect,
+                  child: Text(isOnlyIncorrect ? '전체 보기' : '오답만 보기'),
                 ),
               ),
             ],

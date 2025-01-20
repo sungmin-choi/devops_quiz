@@ -66,7 +66,7 @@ class _QuestionSettingsScreenState extends State<QuestionSettingsScreen> {
               Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const CategoriesScreen(),
+                  builder: (context) => CategoriesScreen(),
                 ),
                 (route) => false,
               );

@@ -7,10 +7,17 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:devops_quiz/widgets/result/result_question_item.dart';
 import 'package:devops_quiz/screens/categories.dart';
 
-class ResultScreen extends ConsumerWidget {
+class ResultScreen extends ConsumerStatefulWidget {
   const ResultScreen({super.key, required this.category});
 
   final Category category;
+
+  @override
+  ConsumerState<ResultScreen> createState() => _ResultScreenState();
+}
+
+class _ResultScreenState extends ConsumerState<ResultScreen> {
+  bool _isOnlyIncorrect = false;
 
   bool _checkCorrect(dynamic userAnswer, dynamic questionAnswer) {
     if (userAnswer is List && questionAnswer is List) {
@@ -23,7 +30,7 @@ class ResultScreen extends ConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final answers = ref.watch(answersProvider);
     final questions = ref.watch(questionsProvider);
 
@@ -61,10 +68,31 @@ class ResultScreen extends ConsumerWidget {
               if (index == 0) {
                 return Column(
                   children: [
-                    ResultSummary(category: category),
+                    ResultSummary(
+                      isOnlyIncorrect: _isOnlyIncorrect,
+                      onTapOnlyIncorrect: () {
+                        setState(() {
+                          _isOnlyIncorrect = !_isOnlyIncorrect;
+                        });
+                      },
+                      category: widget.category,
+                      questionsCount: questions.length,
+                      correctCount: answers
+                          .asMap()
+                          .entries
+                          .where((entry) => _checkCorrect(
+                              entry.value, questions[entry.key].answer))
+                          .length,
+                    ),
                     const SizedBox(height: 16),
                   ],
                 );
+              }
+              if (_isOnlyIncorrect) {
+                if (_checkCorrect(
+                    answers[index - 1], questions[index - 1].answer)) {
+                  return const SizedBox.shrink();
+                }
               }
               return ResultQuestionItem(
                 index: index - 1,
