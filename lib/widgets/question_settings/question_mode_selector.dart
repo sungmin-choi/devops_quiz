@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
-
-enum QuizMode {
-  random,
-  sort,
-}
+import 'package:devops_quiz/models/question.dart';
 
 class QuestionModeSelector extends StatelessWidget {
   const QuestionModeSelector({

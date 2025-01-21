@@ -1,18 +1,29 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:devops_quiz/models/question.dart';
+import 'package:devops_quiz/services/question_service.dart';
 
 class QuestionsProvider extends StateNotifier<List<Question>> {
   QuestionsProvider() : super([]);
+  final questionService = QuestionService();
 
-  void loadQuestions(List<Question> questions) {
-    final shuffledQuestions = questions.map((question) {
-      if (question.options != null) {
-        question.options?.shuffle();
-      }
-      return question;
-    });
+  Future<void> loadQuestions(String categoryTitle, QuizMode quizMode,
+      int questionCount, QuestionDifficulty questionLevel) async {
+    try {
+      final questions = await questionService.fetchQuestions(
+        categoryTitle: categoryTitle,
+        quizMode: quizMode,
+        questionCount: questionCount,
+        questionLevel: questionLevel,
+      );
 
-    state = shuffledQuestions.toList();
+      state = questions;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  void clear() {
+    state = [];
   }
 }
 

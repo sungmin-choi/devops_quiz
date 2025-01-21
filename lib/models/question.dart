@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:devops_quiz/models/category.dart';
 
 enum QuestionType {
@@ -11,6 +13,11 @@ enum QuestionDifficulty {
   easy,
   medium,
   all,
+}
+
+enum QuizMode {
+  random,
+  sort,
 }
 
 class Question {
@@ -45,21 +52,35 @@ class Question {
     this.options,
   });
 
-  factory Question.fromMap(Map<String, dynamic> map) {
+  factory Question.fromJson(Map<String, dynamic> map) {
+    var rawAnswer = map['answer'];
+    dynamic parsedAnswer;
+
+    // answer 파싱 처리
+    if (rawAnswer is String) {
+      try {
+        // JSON 문자열인 경우 디코딩 시도
+        parsedAnswer = json.decode(rawAnswer);
+      } catch (e) {
+        // JSON 디코딩 실패시 원본 문자열 사용
+        parsedAnswer = rawAnswer;
+      }
+    } else {
+      // 이미 파싱된 데이터인 경우 그대로 사용
+      parsedAnswer = rawAnswer;
+    }
+
     return Question(
       questionId: map['questionId'] ?? '',
-      category: map['category'] ?? '',
-      questionType: _stringToQuestionType(map['questionType']),
-      difficulty: _stringToDifficulty(map['difficulty']),
-
-      // 텍스트 / 이미지 모두 받아와서 저장
       questionText: map['questionText'],
-      imageUrl: map['imageUrl'],
-
+      category: _IntToCategory(map['categoryId']),
+      questionType: _IntToQuestionType(map['questionTypeId']),
+      difficulty: _IntToDifficulty(map['difficultyId']),
       subText: map['subText'],
-      answer: map['answer'],
-      explanationText: map['explanationText'],
+      imageUrl: map['imageUrl'],
       referenceLink: map['referenceLink'],
+      explanationText: map['explanationText'],
+      answer: parsedAnswer,
       options:
           map['options'] != null ? List<String>.from(map['options']) : null,
     );
@@ -81,29 +102,57 @@ class Question {
     };
   }
 
-  static QuestionType _stringToQuestionType(String? type) {
-    switch (type) {
-      case 'singleChoice':
+  // ignore: non_constant_identifier_names
+  static QuestionType _IntToQuestionType(int? typeId) {
+    switch (typeId) {
+      case 1:
         return QuestionType.singleChoice;
-      case 'multipleChoice':
+      case 2:
         return QuestionType.multipleChoice;
-      case 'trueFalse':
+      case 3:
         return QuestionType.trueFalse;
-      case 'fillInTheBlank':
+      case 4:
         return QuestionType.fillInTheBlank;
       default:
-        return QuestionType.singleChoice; // 기본값
+        throw Exception('Unknown question type');
     }
   }
 
-  static QuestionDifficulty _stringToDifficulty(String? diff) {
-    switch (diff) {
-      case 'easy':
+  // ignore: non_constant_identifier_names
+  static QuestionCategory _IntToCategory(int? categoryId) {
+    switch (categoryId) {
+      case 1:
+        return QuestionCategory.kubernetes;
+      case 2:
+        return QuestionCategory.docker;
+      case 3:
+        return QuestionCategory.networking;
+      case 4:
+        return QuestionCategory.git;
+      case 5:
+        return QuestionCategory.ciCd;
+      case 6:
+        return QuestionCategory.linux;
+      case 7:
+        return QuestionCategory.cs;
+      case 8:
+        return QuestionCategory.jenkins;
+      case 9:
+        return QuestionCategory.ansible;
+      default:
+        throw Exception('Unknown category');
+    }
+  }
+
+  // ignore: non_constant_identifier_names
+  static QuestionDifficulty _IntToDifficulty(int? difficultyId) {
+    switch (difficultyId) {
+      case 1:
         return QuestionDifficulty.easy;
-      case 'medium':
+      case 2:
         return QuestionDifficulty.medium;
       default:
-        return QuestionDifficulty.easy; // 기본값
+        throw Exception('Unknown difficulty');
     }
   }
 }

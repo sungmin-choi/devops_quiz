@@ -96,9 +96,9 @@ class _QuestionSettingsScreenState extends State<QuestionSettingsScreen> {
                   children: [
                     QuestionModeSelector(
                       selectedMode: _quizMode,
-                      onModeChanged: (QuizMode newMode) {
+                      onModeChanged: (QuizMode mode) {
                         setState(() {
-                          _quizMode = newMode;
+                          _quizMode = mode;
                         });
                       },
                     ),

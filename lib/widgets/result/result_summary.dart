@@ -23,6 +23,9 @@ class ResultSummary extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final double percentage =
+        questionsCount > 0 ? (correctCount / questionsCount) : 0.0;
+
     return Container(
       padding: const EdgeInsets.all(24.0),
       decoration: BoxDecoration(
@@ -60,7 +63,7 @@ class ResultSummary extends ConsumerWidget {
                     width: 90,
                     height: 90,
                     child: CircularProgressIndicator(
-                      value: correctCount / questionsCount,
+                      value: percentage,
                       backgroundColor: Colors.grey[200],
                       valueColor:
                           AlwaysStoppedAnimation<Color>(Colors.blueAccent),
@@ -74,7 +77,7 @@ class ResultSummary extends ConsumerWidget {
                     bottom: 0,
                     child: Center(
                       child: Text(
-                        '${(correctCount / questionsCount * 100).round()}%',
+                        '${(percentage * 100).round()}%',
                         style:
                             Theme.of(context).textTheme.titleMedium?.copyWith(
                                   color: Colors.blueAccent,
