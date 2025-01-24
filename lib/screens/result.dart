@@ -108,6 +108,7 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
                       explanation: questions[index - 1].explanationText ?? '',
                       isCorrect: _checkCorrect(
                           answers[index - 1], questions[index - 1].answer),
+                      referenceLink: questions[index - 1].referenceLink,
                     );
                   },
                 ),

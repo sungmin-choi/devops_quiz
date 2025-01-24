@@ -10,6 +10,7 @@ import 'package:devops_quiz/provider/answer_provider.dart';
 import 'package:devops_quiz/widgets/questions/question_true_false.dart';
 import 'package:devops_quiz/widgets/questions/question_input.dart';
 import 'package:devops_quiz/screens/result.dart';
+import 'package:devops_quiz/widgets/question_hint_modal.dart';
 
 class QuestionsScreen extends ConsumerStatefulWidget {
   const QuestionsScreen(
@@ -86,6 +87,8 @@ class _QuestionsScreenState extends ConsumerState<QuestionsScreen> {
   Widget build(BuildContext context) {
     final questions = ref.watch(questionsProvider);
     final answers = ref.watch(answersProvider);
+
+    print('questions: $questions');
 
     print('answers: $answers');
 
@@ -184,16 +187,27 @@ class _QuestionsScreenState extends ConsumerState<QuestionsScreen> {
                                     onPressed: () {},
                                     icon:
                                         const Icon(Icons.star_border_outlined)),
-                                const SizedBox(width: 10),
-                                IconButton(
-                                    style: IconButton.styleFrom(
-                                        padding: EdgeInsets.zero,
-                                        minimumSize: Size.zero,
-                                        tapTargetSize:
-                                            MaterialTapTargetSize.shrinkWrap),
-                                    onPressed: () {},
-                                    icon: const Icon(
-                                        Icons.lightbulb_outline_rounded)),
+                                if (widget.answerRevealTiming ==
+                                    AnswerRevealTiming.afterEach) ...[
+                                  const SizedBox(width: 10),
+                                  IconButton(
+                                      style: IconButton.styleFrom(
+                                          padding: EdgeInsets.zero,
+                                          minimumSize: Size.zero,
+                                          tapTargetSize:
+                                              MaterialTapTargetSize.shrinkWrap),
+                                      onPressed: () {
+                                        showModalBottomSheet(
+                                            context: context,
+                                            isScrollControlled: true,
+                                            builder: (context) =>
+                                                QuestionHintModal(
+                                                    question: questions[
+                                                        _currentQuestionIndex]));
+                                      },
+                                      icon: const Icon(
+                                          Icons.lightbulb_outline_rounded)),
+                                ]
                               ],
                             )
                           ]),

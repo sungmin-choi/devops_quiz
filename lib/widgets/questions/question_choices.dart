@@ -5,17 +5,15 @@ import 'package:devops_quiz/models/question.dart';
 import 'package:devops_quiz/provider/answer_provider.dart';
 
 class QuestionChoices extends ConsumerWidget {
-  const QuestionChoices({
-    super.key,
-    required this.options,
-    required this.questionType,
-    required this.index,
-  });
+  const QuestionChoices(
+      {super.key,
+      required this.options,
+      required this.questionType,
+      required this.index});
 
   final List<String> options;
   final QuestionType questionType;
   final int index;
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final currentAnswers = ref.watch(currentAnswerProvider);

@@ -43,7 +43,7 @@ class AnswerRevealTimingSelector extends StatelessWidget {
                 DropdownMenuItem(
                   value: AnswerRevealTiming.afterEach,
                   child: const Text(
-                    '문제를 풀 때마다 정답 및 해설 공개',
+                    '문제마다 정답 및 해설 공개',
                     style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.normal,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ResultQuestionItem extends StatelessWidget {
   final int index;
@@ -7,6 +8,7 @@ class ResultQuestionItem extends StatelessWidget {
   final dynamic correctAnswer;
   final String explanation;
   final bool isCorrect;
+  final String? referenceLink;
   const ResultQuestionItem(
       {super.key,
       required this.index,
@@ -14,7 +16,18 @@ class ResultQuestionItem extends StatelessWidget {
       required this.userAnswer,
       required this.correctAnswer,
       required this.explanation,
-      required this.isCorrect});
+      required this.isCorrect,
+      required this.referenceLink});
+
+  Future<void> _launchUrl(String url) async {
+    final Uri uri = Uri.parse(url);
+    if (!await launchUrl(
+      uri,
+      mode: LaunchMode.inAppWebView, // 외부 브라우저에서 열기
+    )) {
+      throw Exception('Could not launch $url');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -110,14 +123,14 @@ class ResultQuestionItem extends StatelessWidget {
                       ),
                     ],
                   ),
-                  TextButton.icon(
-                    onPressed: () {
-                      // 학습 자료로 이동하는 로직
-                    },
-                    icon: Icon(Icons.link, color: Colors.blue[300]),
-                    label: Text('Learn more',
-                        style: TextStyle(color: Colors.blue[300])),
-                  ),
+                  if (referenceLink != null) ...[
+                    TextButton.icon(
+                      onPressed: () => _launchUrl(referenceLink!),
+                      icon: Icon(Icons.link, color: Colors.blue[300]),
+                      label: Text('Learn more',
+                          style: TextStyle(color: Colors.blue[300])),
+                    ),
+                  ],
                 ],
               ),
             ),

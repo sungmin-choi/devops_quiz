@@ -188,12 +188,13 @@ final List<Question> kubernetesQuestions = [
     explanationText: 'RollingUpdate와 Recreate는 Kubernetes의 기본 Pod 상태 관리 전략입니다.',
   ),
   Question(
-    questionId: 'q206',
+    questionId: '206',
     category: QuestionCategory.kubernetes,
     questionType: QuestionType.fillInTheBlank,
     difficulty: QuestionDifficulty.medium,
     questionText: 'Kubernetes 클러스터의 노드 상태를 확인하는 명령어는 "kubectl get _____" 입니다.',
     answer: 'nodes',
+    referenceLink: 'https://kubernetes.io/docs/reference/kubectl/cheatsheet/',
     explanationText: 'kubectl get nodes 명령어로 클러스터의 노드 상태를 확인할 수 있습니다.',
   ),
   Question(
