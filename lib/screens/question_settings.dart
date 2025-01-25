@@ -114,6 +114,8 @@ class _QuestionSettingsScreenState extends State<QuestionSettingsScreen> {
                     ),
                     const SizedBox(height: 22),
                     QuestionLevelSelector(
+                      easyQuestionCount: widget.category.easyQuestionCount,
+                      mediumQuestionCount: widget.category.mediumQuestionCount,
                       selectedLevel: _questionLevel,
                       onLevelChanged: (QuestionDifficulty newLevel) {
                         setState(() {

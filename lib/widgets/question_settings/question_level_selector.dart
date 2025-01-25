@@ -6,10 +6,14 @@ class QuestionLevelSelector extends StatelessWidget {
     super.key,
     required this.selectedLevel,
     required this.onLevelChanged,
+    required this.easyQuestionCount,
+    required this.mediumQuestionCount,
   });
 
   final QuestionDifficulty selectedLevel;
   final void Function(QuestionDifficulty) onLevelChanged;
+  final int easyQuestionCount;
+  final int mediumQuestionCount;
 
   @override
   Widget build(BuildContext context) {
@@ -62,10 +66,17 @@ class QuestionLevelSelector extends StatelessWidget {
             horizontal: -4, // 왼쪽으로 더 이동
             vertical: -4, // 위아래 간격 축소
           ),
-          onChanged: (QuestionDifficulty? value) {
-            onLevelChanged(value!);
-          },
-          title: Text('쉬움'),
+          onChanged: easyQuestionCount > 0
+              ? (QuestionDifficulty? value) {
+                  onLevelChanged(value!);
+                }
+              : null,
+          title: Text(
+            '쉬움',
+            style: easyQuestionCount > 0
+                ? TextStyle(color: Colors.black)
+                : TextStyle(color: Colors.grey),
+          ),
         ),
         RadioListTile(
           value: QuestionDifficulty.medium,
@@ -83,10 +94,17 @@ class QuestionLevelSelector extends StatelessWidget {
             horizontal: -4, // 왼쪽으로 더 이동
             vertical: -4, // 위아래 간격 축소
           ),
-          onChanged: (QuestionDifficulty? value) {
-            onLevelChanged(value!);
-          },
-          title: Text('보통'),
+          onChanged: mediumQuestionCount > 0
+              ? (QuestionDifficulty? value) {
+                  onLevelChanged(value!);
+                }
+              : null,
+          title: Text(
+            '보통',
+            style: mediumQuestionCount > 0
+                ? TextStyle(color: Colors.black)
+                : TextStyle(color: Colors.grey),
+          ),
         ),
       ],
     );

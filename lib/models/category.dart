@@ -8,6 +8,7 @@ enum QuestionCategory {
   cs,
   jenkins,
   ansible,
+  checked
 }
 
 class Category {

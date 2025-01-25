@@ -3,11 +3,13 @@ import 'package:devops_quiz/widgets/my_progress.dart';
 import 'package:devops_quiz/widgets/category_item.dart';
 import 'package:devops_quiz/models/category.dart';
 import 'package:devops_quiz/services/category_service.dart';
+import 'package:devops_quiz/services/user_service.dart';
 // import 'package:devops_quiz/data/dummy_data.dart';
 
 class CategoriesScreen extends StatelessWidget {
   CategoriesScreen({super.key});
   final CategoryService categoryService = CategoryService();
+  final userService = UserService();
 
   @override
   Widget build(BuildContext context) {
@@ -49,8 +51,12 @@ class CategoriesScreen extends StatelessWidget {
                   crossAxisSpacing: 10,
                   childAspectRatio: 0.9,
                   children: [
+                    if (userService.getCheckedCategory().questionCount > 0)
+                      CategoryItemWidget(
+                          category: userService.getCheckedCategory()),
                     for (var category in categories)
-                      CategoryItemWidget(category: category),
+                      if (category.questionCount > 0)
+                        CategoryItemWidget(category: category),
                   ],
                 ),
               ],
