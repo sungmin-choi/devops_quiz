@@ -11,6 +11,7 @@ import 'package:devops_quiz/widgets/questions/question_true_false.dart';
 import 'package:devops_quiz/widgets/questions/question_input.dart';
 import 'package:devops_quiz/screens/result.dart';
 import 'package:devops_quiz/widgets/question_hint_modal.dart';
+import 'package:devops_quiz/services/user_service.dart';
 
 class QuestionsScreen extends ConsumerStatefulWidget {
   const QuestionsScreen(
@@ -35,6 +36,10 @@ class _QuestionsScreenState extends ConsumerState<QuestionsScreen> {
   int _currentQuestionIndex = 0;
   late Future<void> _loadQuestionsFuture;
 
+  final UserService userService = UserService();
+
+  late List<dynamic> _checkedQuestionIds;
+
   @override
   void initState() {
     super.initState();
@@ -43,6 +48,8 @@ class _QuestionsScreenState extends ConsumerState<QuestionsScreen> {
         widget.quizMode,
         widget.questionCount,
         widget.questionLevel);
+
+    _checkedQuestionIds = userService.getCheckedQuestions();
 
     // 데이터 로딩 후 _initializeAnswer 호출
     Future.microtask(() async {
@@ -91,6 +98,8 @@ class _QuestionsScreenState extends ConsumerState<QuestionsScreen> {
     print('questions: $questions');
 
     print('answers: $answers');
+
+    print('checkedQuestionIds: $_checkedQuestionIds');
 
     Widget buildQuestions(List<Question> questions, int index) {
       if (questions.isEmpty) {
@@ -184,9 +193,39 @@ class _QuestionsScreenState extends ConsumerState<QuestionsScreen> {
                                         minimumSize: Size.zero,
                                         tapTargetSize:
                                             MaterialTapTargetSize.shrinkWrap),
-                                    onPressed: () {},
-                                    icon:
-                                        const Icon(Icons.star_border_outlined)),
+                                    onPressed: () {
+                                      if (_checkedQuestionIds.contains(
+                                          questions[_currentQuestionIndex]
+                                              .questionId)) {
+                                        setState(() {
+                                          _checkedQuestionIds.remove(
+                                              questions[_currentQuestionIndex]
+                                                  .questionId);
+                                        });
+                                        userService.removeCheckedQuestion(
+                                            questions[_currentQuestionIndex]);
+                                      } else {
+                                        setState(() {
+                                          _checkedQuestionIds.add(
+                                              questions[_currentQuestionIndex]
+                                                  .questionId);
+                                        });
+                                        userService.addCheckedQuestion(
+                                            questions[_currentQuestionIndex]);
+                                      }
+                                    },
+                                    icon: _checkedQuestionIds.contains(
+                                            questions[_currentQuestionIndex]
+                                                .questionId)
+                                        ? const Icon(
+                                            Icons.star,
+                                            color: Colors.amber, // 체크된 경우 노란색
+                                          )
+                                        : const Icon(
+                                            Icons.star_border_outlined,
+                                            color:
+                                                Colors.black, // 체크되지 않은 경우 회색
+                                          )),
                                 if (widget.answerRevealTiming ==
                                     AnswerRevealTiming.afterEach) ...[
                                   const SizedBox(width: 10),

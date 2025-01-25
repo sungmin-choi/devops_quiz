@@ -118,7 +118,7 @@ class QuestionHintModal extends StatelessWidget {
                     ],
                   ),
                 ),
-                if (question.referenceLink != null) ...[
+                if (question.referenceLink == null) ...[
                   const SizedBox(height: 8),
                   InkWell(
                     onTap: () => _launchUrl(question.referenceLink!),

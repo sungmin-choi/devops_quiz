@@ -22,17 +22,32 @@ class MyProgress extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('현재 상황',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  )),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text('현재 상황',
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      )),
+              Row(
+                children: [
+                  Icon(Icons.settings, size: 16),
+                  const SizedBox(width: 4),
+                  Text('초기화',
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          )),
+                ],
+              ),
+            ],
+          ),
           SizedBox(height: 20),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              ProgressItemWidget(title: 'Accuracy', value: '85%'),
-              ProgressItemWidget(title: 'Questions', value: '247'),
-              ProgressItemWidget(title: 'categories', value: '18'),
+              ProgressItemWidget(title: '정확도', value: '85%'),
+              ProgressItemWidget(title: '푼 문제 수', value: '247'),
+              ProgressItemWidget(title: '카테고리 수', value: '18'),
             ],
           ),
         ],

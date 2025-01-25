@@ -86,7 +86,7 @@ class Question {
     );
   }
 
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toJson() {
     return {
       'questionId': questionId,
       'category': category,
