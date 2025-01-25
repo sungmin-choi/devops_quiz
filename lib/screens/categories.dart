@@ -6,10 +6,31 @@ import 'package:devops_quiz/services/category_service.dart';
 import 'package:devops_quiz/services/user_service.dart';
 // import 'package:devops_quiz/data/dummy_data.dart';
 
-class CategoriesScreen extends StatelessWidget {
-  CategoriesScreen({super.key});
+class CategoriesScreen extends StatefulWidget {
+  const CategoriesScreen({super.key});
+
+  @override
+  State<CategoriesScreen> createState() => _CategoriesScreenState();
+}
+
+class _CategoriesScreenState extends State<CategoriesScreen> {
   final CategoryService categoryService = CategoryService();
   final userService = UserService();
+  late Category _checkedCategory;
+  late Future<List<Category>> _categoriesFuture;
+
+  void _loadData() {
+    _checkedCategory = userService.getCheckedCategory();
+    _categoriesFuture = categoryService.fetchCategories();
+
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadData();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +43,7 @@ class CategoriesScreen extends StatelessWidget {
                 )),
       ),
       body: FutureBuilder<List<Category>>(
-        future: categoryService.fetchCategories(),
+        future: _categoriesFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
@@ -51,12 +72,13 @@ class CategoriesScreen extends StatelessWidget {
                   crossAxisSpacing: 10,
                   childAspectRatio: 0.9,
                   children: [
-                    if (userService.getCheckedCategory().questionCount > 0)
+                    if (_checkedCategory.questionCount > 0)
                       CategoryItemWidget(
-                          category: userService.getCheckedCategory()),
+                          category: _checkedCategory, loadData: _loadData),
                     for (var category in categories)
                       if (category.questionCount > 0)
-                        CategoryItemWidget(category: category),
+                        CategoryItemWidget(
+                            category: category, loadData: _loadData),
                   ],
                 ),
               ],

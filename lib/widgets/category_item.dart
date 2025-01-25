@@ -4,16 +4,19 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:devops_quiz/screens/question_settings.dart';
 
 class CategoryItemWidget extends StatelessWidget {
-  const CategoryItemWidget({super.key, required this.category});
+  const CategoryItemWidget(
+      {super.key, required this.category, required this.loadData});
 
   final Category category;
+  final Function() loadData;
 
-  void _goToQuestionSettingsScreen(BuildContext context) {
-    Navigator.push(
+  void _goToQuestionSettingsScreen(BuildContext context) async {
+    await Navigator.push(
       context,
       MaterialPageRoute(
           builder: (context) => QuestionSettingsScreen(category: category)),
     );
+    loadData();
   }
 
   @override
