@@ -72,4 +72,26 @@ class QuestionService {
       throw Exception('Failed to load questions: $e');
     }
   }
+
+  Future<List<Question>> fetchQuestionsByIds({
+    required List<dynamic> questionIds,
+    required QuizMode quizMode,
+    required int questionCount,
+    required QuestionDifficulty questionLevel,
+  }) async {
+    try {
+      final response = await http.get(Uri.parse(
+          '$baseUrl/questions/ids?ids=${questionIds.join(',')}&mode=${quizMode.name}&count=$questionCount&difficultyId=${_getQuestionDifficultyId(questionLevel)}'));
+
+      if (response.statusCode == 200) {
+        final List<dynamic> jsonData = json.decode(response.body);
+        return jsonData.map((json) => Question.fromJson(json)).toList();
+      } else {
+        throw Exception('Failed to load questions: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error fetching questions: $e');
+      throw Exception('Failed to load questions: $e');
+    }
+  }
 }

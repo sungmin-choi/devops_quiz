@@ -43,13 +43,13 @@ class _QuestionsScreenState extends ConsumerState<QuestionsScreen> {
   @override
   void initState() {
     super.initState();
+    _checkedQuestionIds = userService.getCheckedQuestions();
     _loadQuestionsFuture = ref.read(questionsProvider.notifier).loadQuestions(
         widget.category.title,
         widget.quizMode,
         widget.questionCount,
-        widget.questionLevel);
-
-    _checkedQuestionIds = userService.getCheckedQuestions();
+        widget.questionLevel,
+        questionIds: _checkedQuestionIds);
 
     // 데이터 로딩 후 _initializeAnswer 호출
     Future.microtask(() async {
@@ -68,8 +68,6 @@ class _QuestionsScreenState extends ConsumerState<QuestionsScreen> {
 
   void _initializeAnswer(int index, List<Question> questions) {
     final answers = ref.read(answersProvider);
-
-    print(' _initializeAnswer answers: $answers, index: $index');
 
     dynamic currentAnswer;
     if (answers.length > index && answers[index] != null) {

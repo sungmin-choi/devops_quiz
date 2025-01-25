@@ -7,14 +7,25 @@ class QuestionsProvider extends StateNotifier<List<Question>> {
   final questionService = QuestionService();
 
   Future<void> loadQuestions(String categoryTitle, QuizMode quizMode,
-      int questionCount, QuestionDifficulty questionLevel) async {
+      int questionCount, QuestionDifficulty questionLevel,
+      {List<dynamic> questionIds = const []}) async {
+    List<Question> questions = [];
     try {
-      final questions = await questionService.fetchQuestions(
-        categoryTitle: categoryTitle,
-        quizMode: quizMode,
-        questionCount: questionCount,
-        questionLevel: questionLevel,
-      );
+      if (categoryTitle == 'Starred') {
+        questions = await questionService.fetchQuestionsByIds(
+          questionIds: questionIds,
+          quizMode: quizMode,
+          questionCount: questionCount,
+          questionLevel: questionLevel,
+        );
+      } else {
+        questions = await questionService.fetchQuestions(
+          categoryTitle: categoryTitle,
+          quizMode: quizMode,
+          questionCount: questionCount,
+          questionLevel: questionLevel,
+        );
+      }
 
       state = questions;
     } catch (e) {
