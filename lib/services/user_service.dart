@@ -2,8 +2,49 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:devops_quiz/models/question.dart';
 import 'package:devops_quiz/models/category.dart';
 
+class UserInfo {
+  final int correctPercent;
+  final int totalResolvedCount;
+
+  UserInfo({
+    required this.correctPercent,
+    required this.totalResolvedCount,
+  });
+}
+
 class UserService {
   final box = Hive.box('userBox');
+
+  UserInfo getUserInfo() {
+    final correctPercent = box.get('correctPercent') ?? 0;
+    final totalResolvedCount = box.get('totalResolvedCount') ?? 0;
+    return UserInfo(
+      correctPercent: correctPercent,
+      totalResolvedCount: totalResolvedCount,
+    );
+  }
+
+  void setUserInfo(int resolvedCount, int correctCount) {
+    final currentTotalResolvedCount = box.get('totalResolvedCount') ?? 0;
+    final currentCorrectPercent = box.get('correctPercent') ?? 0;
+
+    final correctPercent =
+        ((currentTotalResolvedCount * (currentCorrectPercent / 100)) +
+                correctCount) /
+            (resolvedCount + currentTotalResolvedCount) *
+            100;
+
+    box.put('correctPercent', correctPercent.round());
+    box.put('totalResolvedCount', resolvedCount + currentTotalResolvedCount);
+  }
+
+  void initUserInfo() {
+    box.put('correctPercent', 0);
+    box.put('totalResolvedCount', 0);
+    box.put('checkedEasyCnt', 0);
+    box.put('checkedMediumCnt', 0);
+    box.put('checkedQuestionIds', []);
+  }
 
   Category getCheckedCategory() {
     final checkedEasyCnt = box.get('checkedEasyCnt') ?? 0;

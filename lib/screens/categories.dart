@@ -18,11 +18,12 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
   final userService = UserService();
   late Category _checkedCategory;
   late Future<List<Category>> _categoriesFuture;
+  late UserInfo _userInfo;
 
   void _loadData() {
     _checkedCategory = userService.getCheckedCategory();
     _categoriesFuture = categoryService.fetchCategories();
-
+    _userInfo = userService.getUserInfo();
     setState(() {});
   }
 
@@ -61,7 +62,10 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
             padding: const EdgeInsets.all(16.0),
             child: ListView(
               children: [
-                MyProgress(),
+                MyProgress(
+                    userInfo: _userInfo,
+                    userService: userService,
+                    loadData: _loadData),
                 SizedBox(height: 12),
                 GridView.count(
                   shrinkWrap: true, // GridView가 자신의 컨텐츠 크기만큼만 차지하도록 설정

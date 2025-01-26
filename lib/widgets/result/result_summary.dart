@@ -4,9 +4,10 @@ import 'package:devops_quiz/models/category.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:devops_quiz/provider/answers_provider.dart';
 import 'package:devops_quiz/provider/answer_provider.dart';
+import 'package:devops_quiz/services/user_service.dart';
 
 class ResultSummary extends ConsumerWidget {
-  const ResultSummary({
+  ResultSummary({
     super.key,
     required this.category,
     required this.questionsCount,
@@ -20,9 +21,12 @@ class ResultSummary extends ConsumerWidget {
   final int correctCount;
   final bool isOnlyIncorrect;
   final void Function() onTapOnlyIncorrect;
+  final UserService userService = UserService();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    userService.setUserInfo(questionsCount, correctCount);
+
     final double percentage =
         questionsCount > 0 ? (correctCount / questionsCount) : 0.0;
 

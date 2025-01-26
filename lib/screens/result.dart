@@ -6,6 +6,7 @@ import 'package:devops_quiz/provider/questions_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:devops_quiz/widgets/result/result_question_item.dart';
 import 'package:devops_quiz/screens/categories.dart';
+import 'package:devops_quiz/services/user_service.dart';
 
 class ResultScreen extends ConsumerStatefulWidget {
   const ResultScreen({super.key, required this.category});
@@ -18,11 +19,9 @@ class ResultScreen extends ConsumerStatefulWidget {
 
 class _ResultScreenState extends ConsumerState<ResultScreen> {
   bool _isOnlyIncorrect = false;
+  UserService userService = UserService();
 
   bool _checkCorrect(dynamic userAnswer, dynamic questionAnswer) {
-    print('userAnswer: $userAnswer');
-    print('questionAnswer: $questionAnswer');
-
     if (userAnswer is List && questionAnswer is List) {
       return questionAnswer.every((element) => userAnswer.contains(element));
     } else if (userAnswer is String && questionAnswer is String) {
