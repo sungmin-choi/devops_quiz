@@ -39,17 +39,21 @@ class _QuestionsScreenState extends ConsumerState<QuestionsScreen> {
   final UserService userService = UserService();
 
   late List<dynamic> _checkedQuestionIds;
+  late List<dynamic> _wrongQuestionIds;
 
   @override
   void initState() {
     super.initState();
     _checkedQuestionIds = userService.getCheckedQuestions();
+    _wrongQuestionIds = userService.getWrongQuestionsIds();
     _loadQuestionsFuture = ref.read(questionsProvider.notifier).loadQuestions(
         widget.category.title,
         widget.quizMode,
         widget.questionCount,
         widget.questionLevel,
-        questionIds: _checkedQuestionIds);
+        questionIds: widget.category.title == 'Review Sheet'
+            ? _wrongQuestionIds
+            : _checkedQuestionIds);
 
     // 데이터 로딩 후 _initializeAnswer 호출
     Future.microtask(() async {
@@ -84,20 +88,11 @@ class _QuestionsScreenState extends ConsumerState<QuestionsScreen> {
     }
 
     ref.read(currentAnswerProvider.notifier).state = currentAnswer;
-
-    print('currentAnswer: ${ref.watch(currentAnswerProvider)}');
   }
 
   @override
   Widget build(BuildContext context) {
     final questions = ref.watch(questionsProvider);
-    final answers = ref.watch(answersProvider);
-
-    print('questions: $questions');
-
-    print('answers: $answers');
-
-    print('checkedQuestionIds: $_checkedQuestionIds');
 
     Widget buildQuestions(List<Question> questions, int index) {
       if (questions.isEmpty) {
@@ -244,7 +239,87 @@ class _QuestionsScreenState extends ConsumerState<QuestionsScreen> {
                                       },
                                       icon: const Icon(
                                           Icons.lightbulb_outline_rounded)),
-                                ]
+                                ],
+                                if (widget.category.title ==
+                                    'Review Sheet') ...[
+                                  const SizedBox(width: 10),
+                                  IconButton(
+                                    style: IconButton.styleFrom(
+                                        padding: EdgeInsets.zero,
+                                        minimumSize: Size.zero,
+                                        tapTargetSize:
+                                            MaterialTapTargetSize.shrinkWrap),
+                                    onPressed: () {
+                                      // 삭제 확인 다이얼로그 표시
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) => AlertDialog(
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(14),
+                                          ),
+                                          title: const Text(
+                                            '오답노트에서 제거',
+                                            style: TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          content: const Text(
+                                            '이 문제를 오답노트에서 제거하시겠습니까?',
+                                            style: TextStyle(fontSize: 16),
+                                          ),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () =>
+                                                  Navigator.pop(context),
+                                              child: Text(
+                                                '취소',
+                                                style: TextStyle(
+                                                  color: Colors.grey[600],
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                              ),
+                                            ),
+                                            TextButton(
+                                              onPressed: () {
+                                                // 삭제 로직
+                                                userService.removeWrongQuestion(
+                                                    questions[
+                                                        _currentQuestionIndex]);
+                                                Navigator.pop(context);
+                                              },
+                                              style: TextButton.styleFrom(
+                                                backgroundColor: Colors.red[50],
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                  horizontal: 16,
+                                                  vertical: 8,
+                                                ),
+                                              ),
+                                              child: Text(
+                                                '제거',
+                                                style: TextStyle(
+                                                  color: Colors.red[700],
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                                width: 8), // 마지막 버튼 우측 여백
+                                          ],
+                                        ),
+                                      );
+                                    },
+                                    icon: Icon(
+                                      Icons.remove_circle_outline, // 또는 다른 옵션들:
+
+                                      color:
+                                          Colors.red[400], // 빨간색 계열로 경고 의미 전달
+                                      size: 22,
+                                    ),
+                                  ),
+                                ],
                               ],
                             )
                           ]),

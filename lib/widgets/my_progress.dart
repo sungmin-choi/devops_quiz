@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:devops_quiz/services/user_service.dart';
+import 'package:devops_quiz/models/category.dart';
 
 class MyProgress extends StatelessWidget {
   const MyProgress({
@@ -7,12 +8,13 @@ class MyProgress extends StatelessWidget {
     required this.userInfo,
     required this.userService,
     required this.loadData,
+    required this.categories,
   });
 
   final UserInfo userInfo;
   final UserService userService;
   final void Function() loadData;
-
+  final List<Category> categories;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -136,7 +138,10 @@ class MyProgress extends StatelessWidget {
                   title: '정확도', value: '${userInfo.correctPercent}%'),
               ProgressItemWidget(
                   title: '푼 문제 수', value: '${userInfo.totalResolvedCount}'),
-              ProgressItemWidget(title: '카테고리 수', value: '18'),
+              ProgressItemWidget(
+                  title: '카테고리 수',
+                  value:
+                      '${categories.where((category) => category.questionCount > 0).length}'),
             ],
           ),
         ],

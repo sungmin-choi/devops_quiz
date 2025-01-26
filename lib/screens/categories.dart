@@ -17,11 +17,13 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
   final CategoryService categoryService = CategoryService();
   final userService = UserService();
   late Category _checkedCategory;
+  late Category _wrongCategory;
   late Future<List<Category>> _categoriesFuture;
   late UserInfo _userInfo;
 
   void _loadData() {
     _checkedCategory = userService.getCheckedCategory();
+    _wrongCategory = userService.getWrongCategory();
     _categoriesFuture = categoryService.fetchCategories();
     _userInfo = userService.getUserInfo();
     setState(() {});
@@ -65,7 +67,8 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                 MyProgress(
                     userInfo: _userInfo,
                     userService: userService,
-                    loadData: _loadData),
+                    loadData: _loadData,
+                    categories: categories),
                 SizedBox(height: 12),
                 GridView.count(
                   shrinkWrap: true, // GridView가 자신의 컨텐츠 크기만큼만 차지하도록 설정
@@ -76,6 +79,9 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                   crossAxisSpacing: 10,
                   childAspectRatio: 0.9,
                   children: [
+                    if (_wrongCategory.questionCount > 0)
+                      CategoryItemWidget(
+                          category: _wrongCategory, loadData: _loadData),
                     if (_checkedCategory.questionCount > 0)
                       CategoryItemWidget(
                           category: _checkedCategory, loadData: _loadData),

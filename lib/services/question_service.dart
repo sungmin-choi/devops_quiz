@@ -54,9 +54,6 @@ class QuestionService {
       final categoryId = _getCategoryId(categoryTitle);
       final difficultyId = _getQuestionDifficultyId(questionLevel);
 
-      print(
-          'categoryId: $categoryId, difficultyId: $difficultyId, quizMode: ${quizMode.name}, questionCount: $questionCount');
-
       final response = await http.get(Uri.parse(
           '$baseUrl/questions?categoryId=$categoryId&mode=${quizMode.name}&count=$questionCount&difficultyId=$difficultyId'));
 

@@ -36,6 +36,13 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
     final answers = ref.watch(answersProvider);
     final questions = ref.watch(questionsProvider);
 
+    if (widget.category.title != 'Review Sheet') {
+      userService.addWrongQuestion(questions
+          .where((question) => !_checkCorrect(
+              answers[questions.indexOf(question)], question.answer))
+          .toList());
+    }
+
     return Scaffold(
         appBar: AppBar(
           centerTitle: true,

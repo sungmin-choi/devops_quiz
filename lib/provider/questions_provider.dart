@@ -11,7 +11,7 @@ class QuestionsProvider extends StateNotifier<List<Question>> {
       {List<dynamic> questionIds = const []}) async {
     List<Question> questions = [];
     try {
-      if (categoryTitle == 'Starred') {
+      if (categoryTitle == 'Starred' || categoryTitle == 'Review Sheet') {
         questions = await questionService.fetchQuestionsByIds(
           questionIds: questionIds,
           quizMode: quizMode,
