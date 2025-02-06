@@ -46,7 +46,7 @@ class CategoryItemWidget extends StatelessWidget {
           Row(
             children: [
               SvgPicture.asset(category.imageUrl, width: 30, height: 30),
-              SizedBox(width: 15),
+              SizedBox(width: 10),
               Text(
                 category.title,
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(

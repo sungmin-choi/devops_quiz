@@ -72,7 +72,7 @@ class UserService {
 
     return Category(
       category: QuestionCategory.checked,
-      title: 'Review Sheet',
+      title: 'Review Note',
       subtitle: '오답노트',
       imageUrl: 'assets/icons/note.svg',
       questionCount: wrongCnt,

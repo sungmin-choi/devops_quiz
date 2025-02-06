@@ -383,8 +383,9 @@ class _QuestionsScreenState extends ConsumerState<QuestionsScreen> {
                   right: 0,
                   child: Container(
                     width: double.infinity,
-                    height: 78,
-                    padding: const EdgeInsets.all(16),
+                    height: 90,
+                    padding: const EdgeInsets.only(
+                        left: 16, right: 16, top: 16, bottom: 21),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       border: Border(

@@ -55,7 +55,7 @@ class QuestionHintModal extends StatelessWidget {
               ),
             ],
           ),
-          const Divider(height: 5),
+          const Divider(height: 5, color: Colors.grey),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             decoration: BoxDecoration(
@@ -82,7 +82,7 @@ class QuestionHintModal extends StatelessWidget {
                 const SizedBox(height: 12),
                 Text(
                   question.explanationText ?? '',
-                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         color: Colors.black87,
                         height: 1.5,
                       ),
@@ -101,16 +101,15 @@ class QuestionHintModal extends StatelessWidget {
                     children: [
                       Text(
                         '✅ 정답',
-                        style:
-                            Theme.of(context).textTheme.titleMedium?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.blue[900],
-                                ),
+                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.blue[900],
+                            ),
                       ),
                       const SizedBox(height: 12),
                       Text(
                         question.answer.toString(),
-                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                               color: Colors.blue[900],
                               fontWeight: FontWeight.w500,
                             ),
@@ -118,7 +117,7 @@ class QuestionHintModal extends StatelessWidget {
                     ],
                   ),
                 ),
-                if (question.referenceLink == null) ...[
+                if (question.referenceLink != null) ...[
                   const SizedBox(height: 8),
                   InkWell(
                     onTap: () => _launchUrl(question.referenceLink!),
@@ -168,7 +167,7 @@ class QuestionHintModal extends StatelessWidget {
                     ),
                   ),
                 ],
-                const SizedBox(height: 10),
+                const SizedBox(height: 21),
               ],
             ),
           ),
