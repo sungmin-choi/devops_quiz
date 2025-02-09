@@ -82,8 +82,10 @@ class _QuestionsScreenState extends ConsumerState<QuestionsScreen> {
         currentAnswer = [];
       } else if (questions[index].questionType == QuestionType.trueFalse) {
         currentAnswer = 'True';
-      } else {
+      } else if (questions[index].questionType == QuestionType.fillInTheBlank) {
         currentAnswer = '';
+      } else {
+        currentAnswer = null;
       }
     }
 

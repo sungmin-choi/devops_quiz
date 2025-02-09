@@ -123,7 +123,7 @@ class ResultQuestionItem extends StatelessWidget {
                       ),
                     ],
                   ),
-                  if (referenceLink != null) ...[
+                  if (referenceLink != null && referenceLink!.isNotEmpty) ...[
                     TextButton.icon(
                       onPressed: () => _launchUrl(referenceLink!),
                       icon: Icon(Icons.link, color: Colors.blue[300]),

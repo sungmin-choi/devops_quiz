@@ -1,5 +1,5 @@
 class AppConfig {
-  static const String baseUrl = 'http://192.168.0.14:3000'; // 개발 환경
+  static const String baseUrl = 'http://home.nmhome.shop'; // 개발 환경
   // static const String baseUrl = 'https://api.yourapp.com';  // 프로덕션 환경
 
   // 다른 글로벌 설정값들도 여기에 추가

@@ -30,7 +30,7 @@ class MyProgress extends StatelessWidget {
           ),
         ],
       ),
-      height: 130,
+      height: 137,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -130,7 +130,7 @@ class MyProgress extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(height: 20),
+          SizedBox(height: 10),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
